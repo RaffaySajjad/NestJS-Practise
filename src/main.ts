@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { OperationsService } from './operations/operations.service';
+import { ConfigService } from '@nestjs/config';
+
+const configService = new ConfigService();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -8,6 +11,7 @@ async function bootstrap() {
   await firebaseService.refreshDataIfNeeded();
   await firebaseService.setCache();
 
-  await app.listen(3000);
+  const PORT = configService.get<string>('PORT');
+  await app.listen(PORT);
 }
 bootstrap();
